@@ -40,6 +40,14 @@ BEGIN_MESSAGE_MAP(CGraphShowerView, CView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_FILE_OPEN, &CGraphShowerView::OnFileOpen)
+	ON_COMMAND(ID_MODE_NORMAL, &CGraphShowerView::OnModeNormal)
+	ON_COMMAND(ID_MODE_WIDTH, &CGraphShowerView::OnModeWidth)
+	ON_COMMAND(ID_MODE_HEIGHT, &CGraphShowerView::OnModeHeight)
+	ON_COMMAND(ID_MODE_SCREEN, &CGraphShowerView::OnModeScreen)
+	ON_UPDATE_COMMAND_UI(ID_MODE_NORMAL, &CGraphShowerView::OnUpdateModeNormal)
+	ON_UPDATE_COMMAND_UI(ID_MODE_WIDTH, &CGraphShowerView::OnUpdateModeWidth)
+	ON_UPDATE_COMMAND_UI(ID_MODE_HEIGHT, &CGraphShowerView::OnUpdateModeHeight)
+	ON_UPDATE_COMMAND_UI(ID_MODE_SCREEN, &CGraphShowerView::OnUpdateModeScreen)
 END_MESSAGE_MAP()
 
 // CGraphShowerView 构造/析构
@@ -227,6 +235,7 @@ CString CGraphShowerView::GetFilePath(int nIndex)
 	return m_strPath + L"\\" + m_FilesNameAry[nIndex];
 }
 
+//修正图像的偏移坐标等信息
 void CGraphShowerView::FixOffset()
 {
 	using namespace Gdiplus;
@@ -281,6 +290,11 @@ void CGraphShowerView::FixOffset()
 	case ST_FIXSCREEN:
 	default:;
 	}
+}
+
+void CGraphShowerView::ClearOffset(void)
+{
+	m_nXX = m_nYY = m_nXXMax = m_nYYMax = 0;
 }
 
 CSize CGraphShowerView::GetShowPicSize(Gdiplus::Image& image, int nShowType)
@@ -371,4 +385,76 @@ void CGraphShowerView::ShowPicture(CDC* pDC, Gdiplus::Image& image, int nShowTyp
 	m_nShowPicWidth = (int)width;
 
 	graph.DrawImage(&image, x, y, width, height);
+}
+
+//原始大小显示图片
+void CGraphShowerView::OnModeNormal()
+{
+	if (m_nShowType != ST_NORMAL)
+	{
+		m_nShowType = ST_NORMAL;
+		ClearOffset();
+		FixOffset();
+		Invalidate();
+	}
+}
+
+//适合宽度显示图片
+void CGraphShowerView::OnModeWidth()
+{
+	if (m_nShowType != ST_FIXWIDTH)
+	{
+		m_nShowType = ST_FIXWIDTH;
+		ClearOffset();
+		FixOffset();
+		Invalidate();
+	}
+}
+
+//适合高度显示图片
+void CGraphShowerView::OnModeHeight()
+{
+	if (m_nShowType != ST_FIXHEIGHT)
+	{
+		m_nShowType = ST_FIXHEIGHT;
+		ClearOffset();
+		FixOffset();
+		Invalidate();
+	}
+}
+
+//适合屏幕显示图片
+void CGraphShowerView::OnModeScreen()
+{
+	if (m_nShowType != ST_FIXSCREEN)
+	{
+		m_nShowType = ST_FIXSCREEN;
+		ClearOffset();
+		FixOffset();
+		Invalidate();
+	}
+}
+
+//原始大小
+void CGraphShowerView::OnUpdateModeNormal(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_nShowType == ST_NORMAL);
+}
+
+//适合宽度
+void CGraphShowerView::OnUpdateModeWidth(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_nShowType == ST_FIXWIDTH);
+}
+
+//适合高度
+void CGraphShowerView::OnUpdateModeHeight(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_nShowType == ST_FIXHEIGHT);
+}
+
+//适合屏幕
+void CGraphShowerView::OnUpdateModeScreen(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_nShowType == ST_FIXSCREEN);
 }

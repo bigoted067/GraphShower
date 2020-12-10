@@ -377,6 +377,11 @@ void CFileView::FixOffset()
 	}
 }
 
+void CFileView::ClearOffset(void)
+{
+	m_nXX = m_nYY = m_nXXMax = m_nYYMax = 0;
+}
+
 CSize CFileView::GetShowPicSize(Gdiplus::Image& image, int nShowType)
 {
 	using namespace Gdiplus;

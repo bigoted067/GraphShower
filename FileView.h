@@ -66,6 +66,7 @@ public:
 	void PreDrawImage(void);			// 在内存中预先绘制图像
 	CString GetFilePath(int nIndex);//获得指定索引文件的全路径
 	void FixOffset();//修正图像的偏移坐标等信息
+	void ClearOffset(void);//清除图像的偏移坐标
 	CSize GetShowPicSize(Gdiplus::Image& image, int nShowType);// 获得指定模式下图像的大小
 	void RefreshIndicator();			// 更新状态栏的指示器信息
 	void ShowPicture(CDC* pDC, Gdiplus::Image& image, int nShowType);
